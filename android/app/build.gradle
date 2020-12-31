@@ -1,0 +1,110 @@
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty('flutter.sdk')
+if (flutterRoot == null) {
+    throw new Exception("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+apply plugin: 'com.android.application'
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    compileSdkVersion 28
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.example.flutter_app"
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            // TODO: Add your own signing config for the release build.
+            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        println("gradle1   "+variant.buildType.name)
+        def buildType = variant.buildType
+        //编译完成前执行的操作
+        variant.outputs.all { output ->
+            def outputFile = output.outputFile
+            def defaultDestinationPath = rootDir.getAbsolutePath()
+            println("gradle2   "+defaultDestinationPath)
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+              //  outputFileName = "TSL-Android-setup-YXZ-" + defaultConfig.versionName + "_" + buildTime() + "_" + output.baseName + ".apk"
+            }
+        }
+        //编译完成后执行的操作
+        variant.assemble.doLast {
+            variant.outputs.all {output ->
+                //复制到根目录下的output文件夹 如果不需要可以直接将代码删除
+                def outputFile = output.outputFile
+                println("gradle3   "+outputFile)
+                publish_To_Local(output,defaultConfig.versionName)
+            }
+        }
+    }
+}
+def publish_To_Local(output,versionName){
+    // 加载properties
+    def properties = new Properties()
+    def inputStream = project.rootProject.file('local.properties').newDataInputStream()
+    properties.load(inputStream)
+    //apk最终发布路径 （电脑上的真实目录, 配置在local.properties）
+    //C:\Users\admin\Desktop\TSL_APP
+    String publishDir = localPropertiesFile.getProperty("flutter.publishDir")
+    String isPublish = properties.getProperty("flutter.isPublish")
+    if (publishDir == null || publishDir.isEmpty() || isPublish == "false") {
+        println("NO Publish To Local !")
+        return
+    }
+    // 从output 目录复制到发布目录(数组，可以写多个目录)
+    ["${publishDir}/SetUpProject"].each { dest ->
+        copy {
+            from output.outputFile
+            into dest
+            rename(output.outputFile.name,"Android_Base" + versionName + "_" + buildTime() + "_" + output.baseName + ".apk")
+        }
+    }
+}
+
+def buildTime() {
+    return new Date().format("yyyyMMdd_HHmm", TimeZone.getTimeZone("GMT+08:00"))
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}

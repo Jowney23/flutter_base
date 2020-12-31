@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://repo.rdc.aliyun.com/repository/46895-release-0vMuPn'
+            credentials {
+                username 'tDngW5'
+                password 'hJqX0j0yfu'
+            }
+        }
+        maven {
+            credentials {
+                username 'tDngW5'
+                password 'hJqX0j0yfu'
+            }
+            url 'https://repo.rdc.aliyun.com/repository/46895-snapshot-jKpBUU'
+        }
+        google()
+        jcenter()
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
