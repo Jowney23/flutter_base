@@ -14,6 +14,7 @@ const _themes = <MaterialColor>[
 ];
 
 class Global {
+
   static SharedPreferences _prefs;
   static Profile profile = Profile();
   // 网络缓存对象
