@@ -2,30 +2,33 @@ import 'package:flutter_app/common/app_setting.dart';
 
 class LogUtil {
   static const String _TAG_DEF = "###tsl_log_infor###";
-
-  static bool debuggable = AppSettings.inProduction; //是否是debug模式,true: log v 不输出.
-  static String TAG = _TAG_DEF;
-
-  static void init({bool isDebug = false, String tag = _TAG_DEF}) {
-    debuggable = isDebug;
-    TAG = tag;
-  }
-
-  static void e(Object object, {String tag}) {
+  static void e(Object object, {String tag = _TAG_DEF}) {
     _printLog(tag, '  e  ', object);
   }
 
-  static void v(Object object, {String tag}) {
-    if (debuggable) {
+  static void v(Object object, {String tag = _TAG_DEF}) {
+    if (AppSettings.inPrintLog) {
       _printLog(tag, '  v  ', object);
     }
   }
 
   static void _printLog(String tag, String stag, Object object) {
     StringBuffer sb = new StringBuffer();
-    sb.write((tag == null || tag.isEmpty) ? TAG : tag);
+    sb.write((tag == null || tag.isEmpty) ? "NO Tag " : tag);
     sb.write(stag);
     sb.write(object);
-    print(sb.toString());
+    String data = sb.toString();
+    /**
+     * 防止日志过长打印不完全
+     */
+    while (data.isNotEmpty) {
+      if (data.length > 512) {
+        print("${data.substring(0, 512)}");
+        data = data.substring(512, data.length);
+      } else {
+        print("$data");
+        data = "";
+      }
+    }
   }
 }

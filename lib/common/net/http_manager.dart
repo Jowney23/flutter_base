@@ -8,7 +8,7 @@ import 'package:flutter_app/common/util/log.dart';
 import 'http_error.dart';
 
 ///http请求成功回调
-typedef HttpSuccessCallback<T> = void Function(dynamic data);
+typedef HttpSuccessCallback = void Function(dynamic data);
 
 ///失败回调
 typedef HttpFailureCallback = void Function(HttpError data);
@@ -16,21 +16,17 @@ typedef HttpFailureCallback = void Function(HttpError data);
 ///数据解析回调
 typedef T JsonParse<T>(dynamic data);
 
-//typedef JsonParse<T>= T Function<T>(dynamic data);
-
 /// @desc  封装 http 请求
 /// 1>：首先从本地数据库的缓存中读取数据，如果缓存有数据，就直接显示列表数据，同时去请求服务器，如果服务器返回数据了，这个时候就去比对服务器返回的数据与缓存中的数据，看是否一样；
 /// 2>：如果比对结果是一样，那么直接return返回，不做任何操作；
 /// 3>：如果比对结果不一样，就去刷新列表数据，同时把之前数据库中的数据删除，然后存储新的数据；
-/// @time 2019/3/15 10:35 AM
-/// @author Cheney
 class HttpManager {
   ///同一个CancelToken可以用于多个请求，当一个CancelToken取消时，所有使用该CancelToken的请求都会被取消，一个页面对应一个CancelToken。
   Map<String, CancelToken> _cancelTokens = Map<String, CancelToken>();
 
   ///超时时间
-  static const int CONNECT_TIMEOUT = 30000;
-  static const int RECEIVE_TIMEOUT = 30000;
+  static const int CONNECT_TIMEOUT = 10000;
+  static const int RECEIVE_TIMEOUT = 10000;
 
   /// http request methods
   static const String GET = 'get';
@@ -54,6 +50,7 @@ class HttpManager {
       );
       _client = Dio(options);
     }
+    LogUtil.v("HttpManager初始化成功",tag: "###Net###");
   }
 
   ///初始化公共属性
@@ -165,7 +162,6 @@ class HttpManager {
     //设置默认值
     params = params ?? {};
     method = method ?? 'GET';
-
     options?.method = method;
 
     options = options ??
@@ -182,7 +178,6 @@ class HttpManager {
             _cancelTokens[tag] == null ? CancelToken() : _cancelTokens[tag];
         _cancelTokens[tag] = cancelToken;
       }
-
       Response<Map<String, dynamic>> response = await _client.request(url,
           data: data,
           queryParameters: params,

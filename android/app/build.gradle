@@ -79,7 +79,7 @@ def publish_To_Local(output,versionName){
     properties.load(inputStream)
     //apk最终发布路径 （电脑上的真实目录, 配置在local.properties）
     //C:\Users\admin\Desktop\TSL_APP
-    String publishDir = localPropertiesFile.getProperty("flutter.publishDir")
+    String publishDir = properties.getProperty("flutter.publishDir")
     String isPublish = properties.getProperty("flutter.isPublish")
     if (publishDir == null || publishDir.isEmpty() || isPublish == "false") {
         println("NO Publish To Local !")
