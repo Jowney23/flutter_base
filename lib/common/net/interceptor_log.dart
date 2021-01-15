@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_app/common/util/log.dart';
 
-/// @desc 拦截器-》打印请求信息，响应信息，错误信息
+import 'http_error.dart';
+
+/// @desc 拦截器-》打印请求信息，响应信息，错误信息 -------------------->只负责打印日志，不做任何处理
 void _log2Console(Object object) {
-  LogUtil.v(object,tag: "log_interceptor");
+  LogUtil.v(object, tag: "log_interceptor");
 }
 
 class LogInterceptor extends Interceptor {
@@ -49,8 +51,7 @@ class LogInterceptor extends Interceptor {
 
   @override
   Future<RequestOptions> onRequest(RequestOptions options) async {
-    print("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu1请求");
-    logPrint('********** Request Info Start**********',);
+    logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器 Request Info Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
     _printKV('uri', options.uri);
 
     if (request) {
@@ -67,14 +68,13 @@ class LogInterceptor extends Interceptor {
     if (requestBody) {
       _printKV("requestBody", options.data);
     }
-    logPrint("********** Request Info End**********");
+    logPrint("⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器 Request Info End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆");
     return options;
   }
 
   @override
   Future<Response> onResponse(Response response) async {
-    print("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu1响应");
-    logPrint("********** Response Info Start**********");
+    logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器 Response Info Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
     _printKV('uri', response.request?.uri);
     if (responseHeader) {
       _printKV('statusCode', response.statusCode);
@@ -89,20 +89,38 @@ class LogInterceptor extends Interceptor {
     if (responseBody) {
       _printKV("responseBody", response.toString());
     }
-    logPrint("********** Response Info End**********");
+    logPrint("⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器Response Info End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆");
     return response;
   }
 
   @override
   Future<DioError> onError(DioError err) async {
     if (error) {
-      logPrint('********** DioError Info Start**********');
-      if (err.message == null) {
-        logPrint("异常信息为空");
-      } else {
-        logPrint("异常信息为：${err.message}");
+      logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器 DioError Info Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
+      switch (err.type) {
+        /// It occurs when url is opened timeout.
+        case DioErrorType.CONNECT_TIMEOUT:
+
+        /// It occurs when url is sent timeout.
+        case DioErrorType.SEND_TIMEOUT:
+
+        ///It occurs when receiving timeout.
+        case DioErrorType.RECEIVE_TIMEOUT:
+
+        /// When the request is cancelled, dio will throw a error with this type.
+        case DioErrorType.CANCEL:
+
+        /// Default error type, Some other Error. In this case, you can
+        /// use the DioError.error if it is not null.
+        case DioErrorType.DEFAULT:
+        logPrint("错误类型:${err.type}    错误信息：${err.toString()}");
+        break;
+      /// When the server response, but with a incorrect status, such as 404, 503...
+        case DioErrorType.RESPONSE:
+          logPrint("错误类型:RESPONSE   错误码:${err.error}      错误信息：${err?.response?.toString()}");
+          break;
       }
-      logPrint("********** DioError Info End**********");
+      logPrint('⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器 DioError Info End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆');
     }
     return err;
   }

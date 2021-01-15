@@ -1,40 +1,61 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/common/util/log.dart';
 import 'package:flutter_app/common/util/sharedpreference.dart';
 import 'package:flutter_app/net/server_api.dart';
+import 'package:flutter_app/page/base_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class SplashPage extends StatefulWidget {
+import '../app_global.dart';
+
+// ignore: non_constant_identifier_names
+final String TAG = "SplashPage";
+class SplashPage extends BasePage{
+
+  @override
+  Widget childBuild(BuildContext context) {
+    return SplashWidget();
+  }
+}
+class SplashWidget extends StatefulWidget {
   @override
   State createState() {
-    return _SplashPageState();
+    return _SplashWidgetState();
   }
 }
 
-class _SplashPageState extends State<SplashPage> {
+class _SplashWidgetState extends State<SplashWidget> {
   String _data = '我是闪屏哦哦哦哦哦哦哦';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    //开源框架已经封装的很好了，没必要二次封装
     PermissionHandler().requestPermissions([
       PermissionGroup.camera,
       PermissionGroup.storage
     ]).then((permissionMap) {
       permissionMap.forEach((key, value) {
-        LogUtil.v("权限名称：${key.toString()}---->权限状态：${value.toString()}");
+        LogUtil.v("权限名称：${key.toString()}---->权限状态：${value.toString()}",
+            stackTrace: StackTrace.current);
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("build了哦");
+    Global.currentContext = context;
+  LogUtil.v("Build执行 ",stackTrace: StackTrace.current);
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          Text(_data),
+          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_light',fontSize: 30),),
+          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_regular',fontSize: 30),),
+          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_medimu',fontSize: 30),),
+          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_bold',fontSize: 30),),
+          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_heavy',fontSize: 30),),
+
           RaisedButton(
             child: Text("添加"),
             onPressed: () {
@@ -43,10 +64,10 @@ class _SplashPageState extends State<SplashPage> {
           ),
           RaisedButton(
             child: Text("查询"),
-            onPressed: (){
-              ServerApi().funSample();
-              SpUtil().getStorage("wxy").then((value){
-                LogUtil.v(value);
+            onPressed: () {
+              ServerApi().apiSample();
+              SpUtil().getStorage("wxy").then((value) {
+                LogUtil.v(value, tag: TAG);
               });
             },
           ),
@@ -55,15 +76,4 @@ class _SplashPageState extends State<SplashPage> {
       backgroundColor: Colors.black12,
     );
   }
-
-  Future<Map<PermissionGroup, PermissionStatus>> checkPermission(List<PermissionGroup> neededPermissions) async {
-    Map<PermissionGroup, PermissionStatus> permissionsStatus =
-        await PermissionHandler().requestPermissions(neededPermissions);
-    permissionsStatus?.forEach((key, value) {
-      if(value != PermissionStatus.granted){
-        print("无权限"+key.toString());
-      }
-    });
-
-}
 }

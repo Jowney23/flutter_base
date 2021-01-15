@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/common/util/log.dart';
 
 import 'http_error.dart';
-
+final String TAG = "HttpManager";
 ///http请求成功回调
 typedef HttpSuccessCallback = void Function(dynamic data);
 
@@ -50,7 +50,7 @@ class HttpManager {
       );
       _client = Dio(options);
     }
-    LogUtil.v("HttpManager初始化成功",tag: "###Net###");
+    LogUtil.v("HttpManager初始化成功",stackTrace: StackTrace.current);
   }
 
   ///初始化公共属性
@@ -439,8 +439,7 @@ class HttpManager {
     ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      LogUtil.v("请求网络异常，请稍后重试！");
-      throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请稍后重试！"));
+      throw (HttpError(HttpError.NETWORK_ERROR, "网络未连接，请稍后重试！"));
     }
 
     //设置默认值
@@ -463,32 +462,19 @@ class HttpManager {
             _cancelTokens[tag] == null ? CancelToken() : _cancelTokens[tag];
         _cancelTokens[tag] = cancelToken;
       }
-
       Response<Map<String, dynamic>> response = await _client.request(url,
           queryParameters: params,
           data: data,
           options: options,
           cancelToken: cancelToken);
-      String statusCode = response.data["statusCode"];
-      if (statusCode == "0") {
-        //成功
         if (jsonParse != null) {
           return jsonParse(response.data["data"]);
         } else {
           return response.data["data"];
         }
-      } else {
-        //失败
-        String message = response.data["statusDesc"];
-        LogUtil.v("请求服务器出错：$message");
-        //只能用 Future，外层有 try catch
-        return Future.error((HttpError(statusCode, message)));
-      }
     } on DioError catch (e, s) {
-      LogUtil.v("请求出错：$e\n$s");
       throw (HttpError.dioError(e));
     } catch (e, s) {
-      LogUtil.v("未知异常出错：$e\n$s");
       throw (HttpError(HttpError.UNKNOWN, "网络异常，请稍后重试！"));
     }
   }

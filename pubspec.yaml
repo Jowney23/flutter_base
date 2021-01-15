@@ -52,7 +52,27 @@ flutter:
   assets:
     - assets/img/
     - assets/font/
+    - assets/gif/
     - assets/json/net_response/
+
+  fonts:
+    - family: puhui_light
+      fonts:
+            - asset: assets/font/ali_puhui/Alibaba-PuHuiTi-Light.ttf
+    - family: puhui_regular
+      fonts:
+            - asset: assets/font/ali_puhui/Alibaba-PuHuiTi-Regular.ttf
+    - family: puhui_medimu
+      fonts:
+            - asset: assets/font/ali_puhui/Alibaba-PuHuiTi-Medium.ttf
+    - family: puhui_bold
+      fonts:
+            - asset: assets/font/ali_puhui/Alibaba-PuHuiTi-Bold.ttf
+    - family: puhui_heavy
+      fonts:
+            - asset: assets/font/ali_puhui/Alibaba-PuHuiTi-Heavy.ttf
+
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

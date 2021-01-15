@@ -110,7 +110,7 @@ class _MyDialogState extends State<_MyDialog> {
           SizedBox(
             width: 60.0,
             child: Image.asset(
-              'assets/img/double_ring_loading_io.gif',
+              'assets/gif/double_ring_loading_io.gif',
             ),
           ),
           const SizedBox(width: 15.0),

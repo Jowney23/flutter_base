@@ -3,8 +3,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/app_global.dart';
 import 'package:flutter_app/common/net/http_manager.dart';
 import 'package:flutter_app/common/util/log.dart';
+import 'package:flutter_app/common/widget/widget_helper.dart';
 import 'package:flutter_app/net/server_url.dart';
 
 import 'model/project_list.dart';
@@ -26,12 +28,13 @@ class ServerApi {
   }
 
   ///该方法用于参考,实际开发中可删除
-  funSample() {
+  apiSample() {
     if (!_loadDataFromNetWork) {
       rootBundle.loadString(_loadDataPath + "project_tree.json").then((value) {
         ProjectList result = ProjectList.fromJson(json.decode(value));
       });
     }
+    DialogHelper.loading(context: Global.currentContext,message:"库日天" );
     HttpManager()
         .getAsync<ProjectList>(
             url: GET_PROJECT_TREE_URL,
@@ -42,9 +45,11 @@ class ServerApi {
             })
         .then((value) {
 
-    }).catchError((error){
-      LogUtil.v(error.toString(),tag: "ServerApi.class");
+    }).catchError((error) {
+          LogUtil.v(error.toString(),stackTrace: StackTrace.current);
+    }).whenComplete(() {
+      DialogHelper.stopLoading();
+      LogUtil.v("请求完成", stackTrace: StackTrace.current);
     });
   }
-
 }

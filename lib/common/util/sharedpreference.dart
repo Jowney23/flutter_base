@@ -37,7 +37,7 @@ class SpUtil {
     // 否则 获取value的类型的字符串形式
     else {
       type = value.runtimeType.toString();
-      LogUtil.v("SharedPreference存储类型数据类型$type");
+      LogUtil.v("SharedPreference存储类型数据类型$type",stackTrace: StackTrace.current);
     }
     // 根据value不同的类型 用不同的方法进行存储
     switch (type) {
@@ -106,10 +106,8 @@ class SpUtil {
     try {
       // 如果value是一个json的字符串 则不会报错 返回true
       JsonDecoder().convert(value);
-      LogUtil.v("是一个json字符串");
       return true;
     } catch (e) {
-      LogUtil.v("不是一个json字符串");
       // 如果value不是json的字符串 则报错 进入catch 返回false
       return false;
     }
