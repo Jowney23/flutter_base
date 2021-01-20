@@ -13,7 +13,7 @@ import 'package:flutter_app/net/server_api.dart';
 import 'package:flutter_app/net/server_url.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'common/net/interceptor_update_data.dart';
+import 'net/interceptor/interceptor_update_data.dart';
 
 const _themes = <MaterialColor>[
   Colors.blue,

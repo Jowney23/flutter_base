@@ -153,7 +153,7 @@ class HttpManager {
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       if (errorCallback != null) {
-        errorCallback(HttpError(HttpError.NETWORK_ERROR, "网络异常，请稍后重试！"));
+        errorCallback(HttpError(HttpError.NETWORK_NOT_CONNECTED, "网络异常，请稍后重试！"));
       }
       LogUtil.v("请求网络异常，请稍后重试！");
       return;
@@ -237,7 +237,7 @@ class HttpManager {
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       if (errorCallback != null) {
-        errorCallback(HttpError(HttpError.NETWORK_ERROR, "网络异常，请稍后重试！"));
+        errorCallback(HttpError(HttpError.NETWORK_NOT_CONNECTED, "网络异常，请稍后重试！"));
       }
       LogUtil.v("请求网络异常，请稍后重试！");
       return;
@@ -310,7 +310,7 @@ class HttpManager {
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       if (errorCallback != null) {
-        errorCallback(HttpError(HttpError.NETWORK_ERROR, "网络异常，请稍后重试！"));
+        errorCallback(HttpError(HttpError.NETWORK_NOT_CONNECTED, "网络异常，请稍后重试！"));
       }
       LogUtil.v("请求网络异常，请稍后重试！");
       return;
@@ -439,7 +439,7 @@ class HttpManager {
     ConnectivityResult connectivityResult =
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
-      throw (HttpError(HttpError.NETWORK_ERROR, "网络未连接，请稍后重试！"));
+      throw (HttpError(HttpError.NETWORK_NOT_CONNECTED, "网络未连接，请稍后重试！"));
     }
 
     //设置默认值
@@ -474,7 +474,9 @@ class HttpManager {
         }
     } on DioError catch (e, s) {
       throw (HttpError.dioError(e));
-    } catch (e, s) {
+    } on HttpError catch (e, s) {
+      throw (e);
+    }catch(e){
       throw (HttpError(HttpError.UNKNOWN, "网络异常，请稍后重试！"));
     }
   }
@@ -502,7 +504,7 @@ class HttpManager {
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       LogUtil.v("请求网络异常，请稍后重试！");
-      throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请稍后重试！"));
+      throw (HttpError(HttpError.NETWORK_NOT_CONNECTED, "网络异常，请稍后重试！"));
     }
     //设置下载不超时
     int receiveTimeout = 0;
@@ -560,7 +562,7 @@ class HttpManager {
         await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) {
       LogUtil.v("请求网络异常，请稍后重试！");
-      throw (HttpError(HttpError.NETWORK_ERROR, "网络异常，请稍后重试！"));
+      throw (HttpError(HttpError.NETWORK_NOT_CONNECTED, "网络异常，请稍后重试！"));
     }
 
     //设置默认值

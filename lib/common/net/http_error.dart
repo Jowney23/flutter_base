@@ -1,33 +1,13 @@
 import 'package:dio/dio.dart';
 
-/// @desc  网络请求错误
+/// @desc 对网络模块儿错误的统一封装，dioError和其他error（比如说网络是否连接、解析从服务端获取的数据时发生的错误）
+/// dioError统一为内部错误（在拦截器的onRequest、onResponse、onError中发生的错误）
+/// 其它error统一为外部错误（在拦截器以外发生的错误）
 class HttpError {
   ///未知错误
   static const String UNKNOWN = "UNKNOWN";
-
-  ///解析错误
-  static const String PARSE_ERROR = "PARSE_ERROR";
-
-  ///网络错误
-  static const String NETWORK_ERROR = "NETWORK_ERROR";
-
-  ///协议错误
-  static const String HTTP_ERROR = "HTTP_ERROR";
-
-  ///证书错误
-  static const String SSL_ERROR = "SSL_ERROR";
-
-  ///连接超时
-  static const String CONNECT_TIMEOUT = "CONNECT_TIMEOUT";
-
-  ///响应超时
-  static const String RECEIVE_TIMEOUT = "RECEIVE_TIMEOUT";
-
-  ///发送超时
-  static const String SEND_TIMEOUT = "SEND_TIMEOUT";
-
-  ///网络请求取消
-  static const String CANCEL = "CANCEL";
+  ///网络未连接
+  static const String NETWORK_NOT_CONNECTED = "NETWORK_NOT_CONNECTED";
 
   String errorType;
 

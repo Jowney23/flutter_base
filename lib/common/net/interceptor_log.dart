@@ -51,7 +51,8 @@ class LogInterceptor extends Interceptor {
 
   @override
   Future<RequestOptions> onRequest(RequestOptions options) async {
-    logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器 Request Info Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
+    logPrint('--------------------------------------------------------------------------------------------------------');
+    logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器onRequest  Start⬇⬇⬇⬇⬇⬇⬇⬇⬇');
     _printKV('uri', options.uri);
 
     if (request) {
@@ -68,13 +69,14 @@ class LogInterceptor extends Interceptor {
     if (requestBody) {
       _printKV("requestBody", options.data);
     }
-    logPrint("⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器 Request Info End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆");
+    logPrint("⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器onRequest  End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆");
     return options;
   }
 
   @override
   Future<Response> onResponse(Response response) async {
-    logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器 Response Info Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
+    logPrint('--------------------------------------------------------------------------------------------------------');
+    logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器onResponse  Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
     _printKV('uri', response.request?.uri);
     if (responseHeader) {
       _printKV('statusCode', response.statusCode);
@@ -89,14 +91,16 @@ class LogInterceptor extends Interceptor {
     if (responseBody) {
       _printKV("responseBody", response.toString());
     }
-    logPrint("⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器Response Info End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆");
+    logPrint("⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器onResponse  End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆");
     return response;
   }
 
   @override
   Future<DioError> onError(DioError err) async {
     if (error) {
-      logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器 DioError Info Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
+      logPrint('--------------------------------------------------------------------------------------------------------');
+      logPrint('⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇日志拦截器onError  Start⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇⬇');
+      logPrint("~~~日志拦截器只能捕获到 client的onRequest、onResponse、onError中的错误~~~");
       switch (err.type) {
         /// It occurs when url is opened timeout.
         case DioErrorType.CONNECT_TIMEOUT:
@@ -117,10 +121,10 @@ class LogInterceptor extends Interceptor {
         break;
       /// When the server response, but with a incorrect status, such as 404, 503...
         case DioErrorType.RESPONSE:
-          logPrint("错误类型:RESPONSE   错误码:${err.error}      错误信息：${err?.response?.toString()}");
+          logPrint("DioError.type:RESPONSE \n                    DioError.error:${err.error} \n                    DioError.response：${err?.response?.toString()}");
           break;
       }
-      logPrint('⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器 DioError Info End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆');
+      logPrint('⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆日志拦截器onError  End⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆⬆');
     }
     return err;
   }

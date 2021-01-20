@@ -34,22 +34,25 @@ class ServerApi {
         ProjectList result = ProjectList.fromJson(json.decode(value));
       });
     }
-    DialogHelper.loading(context: Global.currentContext,message:"库日天" );
+    DialogHelper.loading(context: Global.currentContext, message: "库日天");
     HttpManager()
         .getAsync<ProjectList>(
             url: GET_PROJECT_TREE_URL,
             tag: GET_PROJECT_TREE_URL,
-            params: {"rootId": -1},
             jsonParse: (value) {
               return ProjectList.fromJson(value);
             })
-        .then((value) {
-
-    }).catchError((error) {
-          LogUtil.v(error.toString(),stackTrace: StackTrace.current);
+        .then((value) {})
+        .catchError((error) {
+      LogUtil.v(error.toString(), stackTrace: StackTrace.current);
     }).whenComplete(() {
       DialogHelper.stopLoading();
       LogUtil.v("请求完成", stackTrace: StackTrace.current);
     });
+  }
+
+  ///该方法用于参考，实际开发中可删除
+  apiSampleUploadPicture() {
+   // HttpManager().uploadAsync(url: null, tag: null)
   }
 }

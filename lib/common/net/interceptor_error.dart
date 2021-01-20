@@ -19,6 +19,7 @@ class ErrorInterceptor extends Interceptor {
 
   @override
   Future<Response> onResponse(Response response) async {
+    logPrint("response执行了吗？  ${response.data}");
     //返回结果不正确，则人为抛出异常
     Map data = response.data;
     //todo 需要根据具体返回数据格式去修改
