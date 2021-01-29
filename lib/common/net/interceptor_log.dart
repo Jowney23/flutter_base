@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_app/common/util/log.dart';
 
-import 'http_error.dart';
-
 /// @desc 拦截器-》打印请求信息，响应信息，错误信息 -------------------->只负责打印日志，不做任何处理
 void _log2Console(Object object) {
   LogUtil.v(object, tag: "log_interceptor");

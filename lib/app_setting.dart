@@ -7,5 +7,5 @@ class AppSettings {
   static const bool inPrintLogToConsole = true;
 
   //是否打印日志到本地
-  static const bool inPrintLogToLocal = false;
+  static const bool inPrintLogToLocal = true;
 }

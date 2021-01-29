@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_app/common/util/sharedpreference.dart';
+import 'package:flutter_app/common/util/shared_preference.dart';
 const CACHE_ENABLE = true;
 const CACHE_MAXAGE = 100;
 const CACHE_MAXCOUNT =20;

@@ -1,30 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/common/util/log.dart';
-import 'package:flutter_app/common/util/sharedpreference.dart';
+import 'package:flutter_app/common/util/shared_preference.dart';
 import 'package:flutter_app/net/server_api.dart';
 import 'package:flutter_app/page/base_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+// ignore: must_be_immutable
+class SplashPage extends BasePage {
 
-import '../app_global.dart';
-
-// ignore: non_constant_identifier_names
-final String TAG = "SplashPage";
-class SplashPage extends BasePage{
-
-  @override
-  Widget childBuild(BuildContext context) {
-    return SplashWidget();
-  }
-}
-class SplashWidget extends StatefulWidget {
-  @override
-  State createState() {
+@override
+  State<StatefulWidget> createState() {
     return _SplashWidgetState();
   }
 }
 
-class _SplashWidgetState extends State<SplashWidget> {
+class _SplashWidgetState extends BasePageState<SplashPage> {
   String _data = '我是闪屏哦哦哦哦哦哦哦';
 
   @override
@@ -44,18 +34,31 @@ class _SplashWidgetState extends State<SplashWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    Global.currentContext = context;
-  LogUtil.v("Build执行 ",stackTrace: StackTrace.current);
+  Widget baseBuild(BuildContext context) {
+    LogUtil.v("Build执行 ", stackTrace: StackTrace.current);
     return Scaffold(
       body: ListView(
         children: <Widget>[
-          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_light',fontSize: 30),),
-          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_regular',fontSize: 30),),
-          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_medimu',fontSize: 30),),
-          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_bold',fontSize: 30),),
-          Text("abcdABCD你好",style: TextStyle(fontFamily: 'puhui_heavy',fontSize: 30),),
-
+          Text(
+            "abcdABCD你好",
+            style: TextStyle(fontFamily: 'puhui_light', fontSize: 30),
+          ),
+          Text(
+            "abcdABCD你好",
+            style: TextStyle(fontFamily: 'puhui_regular', fontSize: 30),
+          ),
+          Text(
+            "abcdABCD你好",
+            style: TextStyle(fontFamily: 'puhui_medium', fontSize: 30),
+          ),
+          Text(
+            "abcdABCD你好",
+            style: TextStyle(fontFamily: 'puhui_bold', fontSize: 30),
+          ),
+          Text(
+            "abcdABCD你好",
+            style: TextStyle(fontFamily: 'puhui_heavy', fontSize: 30),
+          ),
           RaisedButton(
             child: Text("添加"),
             onPressed: () {
@@ -66,9 +69,7 @@ class _SplashWidgetState extends State<SplashWidget> {
             child: Text("查询"),
             onPressed: () {
               ServerApi().apiSample();
-              SpUtil().getStorage("wxy").then((value) {
-                LogUtil.v(value, tag: TAG);
-              });
+
             },
           ),
         ],

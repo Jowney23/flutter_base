@@ -1,7 +1,6 @@
 //对common中网络操作的二次封装，主要封装业务逻辑
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/app_global.dart';
 import 'package:flutter_app/common/net/http_manager.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_app/common/util/log.dart';
 import 'package:flutter_app/common/widget/widget_helper.dart';
 import 'package:flutter_app/net/server_url.dart';
 
+import '../app_value.dart';
 import 'model/project_list.dart';
 
 class ServerApi {
@@ -44,6 +44,7 @@ class ServerApi {
             })
         .then((value) {})
         .catchError((error) {
+      LogUtil.vToLocal(AppFilePath.getLogPathAndroid(), '网络日志获取身份信息',error.toString());
       LogUtil.v(error.toString(), stackTrace: StackTrace.current);
     }).whenComplete(() {
       DialogHelper.stopLoading();
@@ -53,6 +54,6 @@ class ServerApi {
 
   ///该方法用于参考，实际开发中可删除
   apiSampleUploadPicture() {
-   // HttpManager().uploadAsync(url: null, tag: null)
+    // HttpManager().uploadAsync(url: null, tag: null)
   }
 }
