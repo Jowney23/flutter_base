@@ -1,20 +1,23 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/common/util/log.dart';
 import 'package:flutter_app/common/util/shared_preference.dart';
 import 'package:flutter_app/net/server_api.dart';
 import 'package:flutter_app/page/base_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+
+import 'model/counter_test.dart';
 // ignore: must_be_immutable
-class SplashPage extends BasePage {
+class FirstPage extends BasePage {
 
 @override
   State<StatefulWidget> createState() {
-    return _SplashWidgetState();
+    return _FirstPageState();
   }
 }
 
-class _SplashWidgetState extends BasePageState<SplashPage> {
+class _FirstPageState extends BasePageState<FirstPage> {
   String _data = '我是闪屏哦哦哦哦哦哦哦';
 
   @override
@@ -35,8 +38,10 @@ class _SplashWidgetState extends BasePageState<SplashPage> {
 
   @override
   Widget baseBuild(BuildContext context) {
-    LogUtil.v("Build执行 ", stackTrace: StackTrace.current);
+    LogUtil.v("FirstPage Build", stackTrace: StackTrace.current);
+    CounterTest countProvider =  Provider.of<CounterTest>(context);
     return Scaffold(
+      appBar: AppBar(),
       body: ListView(
         children: <Widget>[
           Text(
@@ -60,13 +65,14 @@ class _SplashWidgetState extends BasePageState<SplashPage> {
             style: TextStyle(fontFamily: 'puhui_heavy', fontSize: 30),
           ),
           RaisedButton(
-            child: Text("添加"),
+            child: Text("添加 "),
             onPressed: () {
               SpUtil().setStorage("wxy", 569);
+              countProvider.add();
             },
           ),
           RaisedButton(
-            child: Text("查询"),
+            child: Text("查询${countProvider.number}"),
             onPressed: () {
               ServerApi().apiSample();
 
@@ -74,7 +80,7 @@ class _SplashWidgetState extends BasePageState<SplashPage> {
           ),
         ],
       ),
-      backgroundColor: Colors.black12,
+      backgroundColor: Colors.amber,
     );
   }
 }

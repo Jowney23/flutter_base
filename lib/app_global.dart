@@ -1,6 +1,7 @@
 // 提供五套可选主题色
 import 'package:flutter/material.dart';
 import 'package:flutter_app/common/net/http_manager.dart';
+import 'package:flutter_app/common/util/log.dart';
 import 'package:flutter_app/net/interceptor/interceptor_error.dart';
 import 'package:flutter_app/common/net/interceptor_log.dart';
 import 'package:flutter_app/net/server_api.dart';
@@ -21,10 +22,8 @@ class Global {
   static BuildContext currentContext;
   static Widget currentWidget;
 
-  ///初始化全局信息，会在APP启动时执行
-  ///init里无法执行异步任务，所以init里面不能添加await
-  static Future init() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  //同步初始化,
+  static void initSync() {
     //初始化网络请求相关配置
     HttpManager()
         .init(baseUrl: BASE_URL, connectTimeout: 5000, receiveTimeout: 30000,
@@ -40,5 +39,9 @@ class Global {
         ]);
     //开发初期，只要定义好服务端的json字段，可以先从本地加载数据
     ServerApi().init(loadDataFromNetWork: true);
+    LogUtil.v('全局同步初始化完成',stackTrace: StackTrace.current);
   }
+
+  //异步初始化,在界面中执行完build之后才能初始化成功，将两个区分开主要是便于防止还没初始化完成时就调用其中的实例
+  static Future initASync() async {}
 }

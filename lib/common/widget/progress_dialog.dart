@@ -60,11 +60,10 @@ class ProgressDialog {
         builder: (BuildContext context) {
           _context = context;
           return Dialog(
+            backgroundColor: Color.fromRGBO(0, 0, 0, 0),//设置原生背景为透明，仅适用自定义背景颜色
               insetAnimationCurve: Curves.easeInOut,
               insetAnimationDuration: Duration(milliseconds: 100),
-              elevation: 10.0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              elevation: 20.0,//阴影
               child: _dialog);
         },
       );
@@ -105,46 +104,49 @@ class _MyDialogState extends State<_MyDialog> {
   Widget build(BuildContext context) {
     return SizedBox(
         height: 100.0,
-        child: Row(children: <Widget>[
-          const SizedBox(width: 15.0),
-          SizedBox(
-            width: 60.0,
-            child: Image.asset(
-              'assets/gif/double_ring_loading_io.gif',
+        child: Container(
+          decoration: BoxDecoration(shape: BoxShape.rectangle,color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: Row(children: <Widget>[
+            const SizedBox(width: 15.0),
+            SizedBox(
+              width: 60.0,
+              child: Image.asset(
+                'assets/gif/double_ring_loading_io.gif',
+              ),
             ),
-          ),
-          const SizedBox(width: 15.0),
-          Expanded(
-            child: _progressDialogType == ProgressDialogType.Normal
-                ? Text(_dialogMessage,
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w700))
-                : Stack(
-              children: <Widget>[
-                Positioned(
-                  child: Text(_dialogMessage,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w700)),
-                  top: 35.0,
-                ),
-                Positioned(
-                  child: Text("$_progress/100",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w400)),
-                  bottom: 15.0,
-                  right: 15.0,
-                ),
-              ],
-            ),
-          )
-        ]));
+            const SizedBox(width: 15.0),
+            Expanded(
+              child: _progressDialogType == ProgressDialogType.Normal
+                  ? Text(_dialogMessage,
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.w700))
+                  : Stack(
+                children: <Widget>[
+                  Positioned(
+                    child: Text(_dialogMessage,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w700)),
+                    top: 35.0,
+                  ),
+                  Positioned(
+                    child: Text("$_progress/100",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w400)),
+                    bottom: 15.0,
+                    right: 15.0,
+                  ),
+                ],
+              ),
+            )
+          ]),
+        ));
   }
 }
 

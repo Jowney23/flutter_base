@@ -12,7 +12,7 @@ class SpUtil {
   factory SpUtil() => _instance;
 
   /// SharedPreferences对象
-  static SharedPreferences _storage;
+  static SharedPreferences _sp;
 
   /// 命名构造函数 用于初始化SharedPreferences实例对象
   SpUtil._init() {
@@ -22,7 +22,7 @@ class SpUtil {
   // 之所以这个没有写在 _init中，是因为SharedPreferences.getInstance是一个异步的方法 需要用await接收它的值
   _initStorage() async {
     // 若_不存在 则创建SharedPreferences实例
-    if (_storage == null) _storage = await SharedPreferences.getInstance();
+    if (_sp == null) _sp = await SharedPreferences.getInstance();
   }
 
   /// 设置存储
@@ -42,16 +42,16 @@ class SpUtil {
     // 根据value不同的类型 用不同的方法进行存储
     switch (type) {
       case 'String':
-        _storage.setString(key, value);
+        _sp.setString(key, value);
         break;
       case 'int':
-        _storage.setInt(key, value);
+        _sp.setInt(key, value);
         break;
       case 'double':
-        _storage.setDouble(key, value);
+        _sp.setDouble(key, value);
         break;
       case 'bool':
-        _storage.setBool(key, value);
+        _sp.setBool(key, value);
         break;
     }
   }
@@ -60,7 +60,7 @@ class SpUtil {
   Future<dynamic> getStorage(String key) async {
     await _initStorage();
     // 获取key对应的value
-    dynamic value = _storage.get(key);
+    dynamic value = _sp.get(key);
     // 判断value是不是一个json的字符串 是 则解码
     if (_isJson(value)) {
       return JsonDecoder().convert(value);
@@ -73,14 +73,14 @@ class SpUtil {
   /// 是否包含某个key
   Future<bool> hasKey(String key) async {
     await _initStorage();
-    return _storage.containsKey(key);
+    return _sp.containsKey(key);
   }
 
   /// 删除key指向的存储 如果key存在则删除并返回true，否则返回false
   Future<bool> removeStorage(String key) async {
     await _initStorage();
     if (await hasKey(key)) {
-      await _storage.remove(key);
+      await _sp.remove(key);
       return true;
     } else {
       return false;
@@ -91,14 +91,14 @@ class SpUtil {
   /// 清空存储 并总是返回true
   Future<bool> clear() async {
     await _initStorage();
-    _storage.clear();
+    _sp.clear();
     return true;
   }
 
   /// 获取所有的key 类型为Set<String>
   Future<Set<String>> getKeys() async {
     await _initStorage();
-    return _storage.getKeys();
+    return _sp.getKeys();
   }
 
   // 判断是否是JSON字符串

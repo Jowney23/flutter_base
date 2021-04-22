@@ -13,16 +13,17 @@ class LogUtil {
 
   ///开发阶段推荐使用stackTrace
   static void v(Object object, {String tag = _TAG_DEF, StackTrace stackTrace}) {
-    if (AppSettings.inPrintLogToConsole) {
-      if (stackTrace != null) {
-        //#0      _SplashPageState.build.<anonymous closure> (package:flutter_app/page/splash_page.dart:46:44)
+    if (AppSettings.inPrintLogToConsole ) {
+      //注意当app为release模式时 stackTrack截取时会报错
+      if (stackTrace != null && !AppSettings.inProduction) {
+        //#0      _SplashPageState.build.<anonymous closure> (package:flutter_app/page/main_page.dart:46:44)
         var traceString = stackTrace.toString().split("\n")[0];
         //用正则表达 寻找应该截取的位置
         var indexOfFileName = traceString.indexOf(RegExp(r'[A-Za-z_]+.dart'));
-        //splash_page.dart:46:44)
+        //main_page.dart:46:44)
         var fileInfo = traceString.substring(indexOfFileName);
         var listOfInfos = fileInfo.split(":");
-        //splash_page.dart
+        //main_page.dart
         var fileName = listOfInfos[0];
         //46
         var lineNumber = int.parse(listOfInfos[1]);

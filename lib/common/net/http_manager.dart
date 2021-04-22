@@ -50,7 +50,6 @@ class HttpManager {
       );
       _client = Dio(options);
     }
-    LogUtil.v("HttpManager初始化成功",stackTrace: StackTrace.current);
   }
 
   ///初始化公共属性
